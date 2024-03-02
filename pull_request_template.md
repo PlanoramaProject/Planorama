@@ -2,7 +2,7 @@
 
 **Issue Type**
 
-- [ ] Bug
+- [x] Bug
 - [ ] Feature
 - [ ] Tech Debt
 
@@ -31,4 +31,4 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots and videos to help explain your issue type.
 
 **Additional context**
-Add any other context about the problem
+Add any other context about the problem he

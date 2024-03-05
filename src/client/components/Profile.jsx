@@ -1,13 +1,13 @@
-import './App.css';
+import '../../App.css';
 
-function App() {
+function Profile() {
   return (
     <div className="App">
       <header className="App-header">
-      <p>Welcome to Planorama</p>
+      <p>Welcome to Profile</p>
       </header>
     </div>
   );
 }
 
-export default App;
+export default Profile;

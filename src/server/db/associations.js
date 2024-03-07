@@ -3,18 +3,17 @@ const User = require("./user");
 const UserEvents = require("./userevents");
 const Event = require("./event");
 const UserFriends = require("./userfriends");
+const { pg } = require("pg");
+require("dotenv").config();
 
-const sequelize = new Sequelize(
-  "postgresql://postgres:postgres@planoramadb.cuqfjshz1zj6.us-east-2.rds.amazonaws.com:5432/",
-  {
-    dialectOptions: {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false, // Note: Setting this to false can create security vulnerabilities.
-      },
-    },
-  }
-);
+// const sequelize = new Sequelize(process.env.PGURI, {
+//   dialectOptions: {
+//     ssl: {
+//       require: true,
+//       rejectUnauthorized: false, // Note: Setting this to false can create security vulnerabilities.
+//     },
+//   },
+// });
 
 User.hasMany(Event, { foreignKey: "hostID" });
 Event.belongsTo(User, { as: "Host", foreignKey: "hostID" });

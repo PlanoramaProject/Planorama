@@ -8,10 +8,6 @@ const path = require('path');
 const dotenv = require('dotenv').config();
 if(dotenv.error) console.error(dotenv.error);
 
-const port = process.env.PORT;
-const pgUri = String(process.env.PGURI);
-require("dotenv").config();
-
 const sequelize = new Sequelize(process.env.PGURI, {
   dialectOptions: {
     ssl: {

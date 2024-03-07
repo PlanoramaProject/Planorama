@@ -1,15 +1,14 @@
 const { Sequelize, DataTypes } = require("sequelize");
-const sequelize = new Sequelize(
-  "postgresql://postgres:postgres@planoramadb.cuqfjshz1zj6.us-east-2.rds.amazonaws.com:5432/",
-  {
-    dialectOptions: {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false,
-      },
+require("dotenv").config();
+const { pg } = require("pg");
+const sequelize = new Sequelize(process.env.PGURI, {
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
     },
-  }
-);
+  },
+});
 
 const User = sequelize.define("User", {
   userID: {

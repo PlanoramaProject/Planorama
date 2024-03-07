@@ -1,21 +1,21 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const User = require("./user");
-const sequelize = new Sequelize(
-  "postgresql://postgres:postgres@planoramadb.cuqfjshz1zj6.us-east-2.rds.amazonaws.com:5432/",
-  {
-    dialectOptions: {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false,
-      },
+require("dotenv").config();
+const { pg } = require("pg");
+const sequelize = new Sequelize(process.env.PGURI, {
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
     },
-  }
-);
+  },
+});
 const UserFriends = sequelize.define(
   "UserFriends",
   {
     userID: {
       type: DataTypes.UUID,
+      allowNull: false,
       references: {
         model: User,
         key: "userID",
@@ -24,6 +24,7 @@ const UserFriends = sequelize.define(
     },
     friendID: {
       type: DataTypes.UUID,
+      allowNull: false,
       references: {
         model: User,
         key: "userID",

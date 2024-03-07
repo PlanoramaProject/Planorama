@@ -23,8 +23,16 @@ input:placeholder-shown {
   text-align: left;
 }
 
+input[type=text]:focus {
+  outline-color:rgb(71, 182, 205);
+}
+
 textarea {
   text-align: left;
+}
+
+textarea:focus {
+  outline-color: rgb(71, 182, 205);;
 }
 
 textarea:placeholder-shown {

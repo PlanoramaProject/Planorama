@@ -28,7 +28,7 @@ function EventForm() {
     // set state for confirm signup modal
     const [confrimSignupModal, setConfirmSignupModal] = useState(false);
     // set userId state (which determines which version of components display)
-    const [userId, setUserId] = useState(undefined);
+    const [userId, setUserId] = useState(123);
     const [match, setMatch] = useState('gray');
     const [validated, setValidated] = useState({
         name: 'gray',
@@ -71,6 +71,7 @@ function EventForm() {
 
     // function to handle the submit button on create event form
     async function handleClick(e) {
+        console.log('handleClick')
         editStatus = true;
         e.preventDefault();
         let formData = new FormData(document.getElementById('eventDetails'));
@@ -91,12 +92,15 @@ function EventForm() {
         if (editStatus === true) {
             document.getElementById('eventDetails').reset();
         
-        // const response = await fetch('/api/createEvent', {
-        //     method: 'POST',
-        //     body: JSON.stringify(data),
-        // })
-        // const res = await response.json();
-        // console.log(res);
+        const response = await fetch('api/v1/event', {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                "Content-Type": "application/json",
+              },
+        })
+        const res = await response.json();
+        console.log(res);
         }
     }
 

@@ -40,6 +40,7 @@ router.get("/v1/event/:eventID", eventController.getEvent, (req, res, next) => {
 });
 
 router.post("/v1/event", eventController.createEvent, (req, res, next) => {
+  console.log('post reached')
   return res.status(200).json(res.locals.event);
 });
 router.put("/v1/event", eventController.updateEvent, (req, res, next) => {

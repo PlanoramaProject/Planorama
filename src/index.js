@@ -9,8 +9,8 @@ import Profile from "./client/components/Profile"
 
 const router = createBrowserRouter([
     {
-        path: "/",
-        element: <App />
+      path: "/",
+      element: <App />
     },
     {
       path: "/profile",

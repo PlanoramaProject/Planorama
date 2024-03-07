@@ -1,4 +1,4 @@
-const { User, Event, UserFriends, UserEvents } = require("../db/associations");
+const { User, Event, UserFriends, UserEvents } = require("../models/index");
 
 const eventController = {};
 
@@ -55,6 +55,7 @@ eventController.getEvent = async (req, res, next) => {
 
 eventController.updateEvent = async (req, res, next) => {
   const {
+    eventID,
     eventName,
     location,
     description,
@@ -64,8 +65,8 @@ eventController.updateEvent = async (req, res, next) => {
     endTime,
     capacity,
   } = req.body;
-  if (!eventName) {
-    return next("This shit doesn't work");
+  if (!eventID) {
+    return next("Error msg goes here");
   }
   const updateData = {
     eventName,
@@ -78,9 +79,8 @@ eventController.updateEvent = async (req, res, next) => {
     capacity,
   };
   try {
-    const event = await Event.findOne({ where: { name: eventName } });
+    const event = await Event.findOne({ where: { eventID } });
     if (event) {
-      event.eventID;
       Object.assign(event, updateData);
       const eventProps = await event.save();
       console.log(eventProps.dataValues);
@@ -93,17 +93,31 @@ eventController.updateEvent = async (req, res, next) => {
 };
 
 eventController.deleteEvent = async (req, res, next) => {
-  const { eventName, hostName } = req.body;
-  if (!eventName || !hostName) {
-    return next("EventName or HostName not provided");
+  const { eventID } = req.body;
+  if (!eventID) {
+    return next("Error msg goes here");
   }
   try {
-    const user = await User.findOne({ where: { fullName: hostName } });
-    await Event.destroy({ where: { name: eventName, hostID: user.userID } });
+    await Event.destroy({ where: { eventID } });
     return next();
   } catch (e) {
     console.log(e);
     return next(e);
+  }
+};
+
+eventController.getHostedEvents = async (req, res, next) => {
+  const { userID } = req.params;
+  if (!userID) {
+    return next("Error msg goes here");
+  }
+  try {
+    const events = await Event.findAll({ where: { hostID: userID } });
+    req.locals.events = events;
+    return next();
+  } catch (e) {
+    console.log(e);
+    return e;
   }
 };
 

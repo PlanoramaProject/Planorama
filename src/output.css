@@ -1093,6 +1093,10 @@ input:checked + .toggle-bg {
   visibility: collapse;
 }
 
+.static {
+  position: static;
+}
+
 .fixed {
   position: fixed;
 }

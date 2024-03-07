@@ -45,6 +45,5 @@ app.use((err, req, res, next) => {
 });
 
 
-// app.listen(3000, () => console.log("CONNECTED: listening on PORT", 3000));
 app.listen(port, () => console.log("CONNECTED: listening on PORT", port));
 module.exports = app;

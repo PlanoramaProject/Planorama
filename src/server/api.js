@@ -4,71 +4,34 @@ const { User, Event, UserFriends, UserEvents } = require("./db/associations");
 const { userController } = require('./controllers/userController');
 
 
-router.get("/user", userController.getUser, (req, res) => {
-  console.log("get user success");
-  res.status(200).send(res.locals.success);
+router.get("/v1/user", userController.getUser, (req, res) => {
+  res.status(200).json(res.locals.user);
 });
 
-router.post("/user", userController.createUser, (req, res, next) => {
-  console.log('create user success');
-  res.status(200).send('create was a success');
-});
-
-
-router.get("/user/all", async (req,res) => {
+router.get("/v1/user/all", async (req,res) => {
   const users = await User.findAll();
   res.status(200).send(users);
 })
 
-router.delete("/user", userController.deleteUser, (req, res) => {
-  console.log("delete successful");
+router.post("/v1/user", 
+  userController.userAlreadyExists, 
+  userController.createUser, 
+  (req, res, next) => {
+    if(res.locals.alreadyExists){
+      return res.status(200).json({userAlreadyExists: true})
+    }
+    else{
+      return res.status(200).send('create was a success');
+    }
+});
+
+router.delete("/v1/user", userController.getUser, userController.deleteUser, (req, res) => {
+  // in the middleware chain, this route will return {doesNotExist: true} if the userID cannot be found
   res.status(200).send('delete was a success');
 })
 
+router.patch("/v1/user", userController.updateUser, (req, res) => {
+  res.status(200).send(res.locals.message)
+});
+
 module.exports = router;
-
-// const express = require("express");
-// const router = express.Router();
-// // const { User, Event, UserFriends, UserEvents } = require("./db/associations");
-
-// // Sample endpoint
-
-// router.get("/v1/User", (req, res, next) => {
-//   console.log("sample User endpoitn");
-//   res.status(200);
-// });
-// router.post("/v1/User", (req, res, next) => {
-//   console.log("sample User endpoitn");
-//   res.status(200);
-// });
-// router.update("/v1/User", (req, res, next) => {
-//   console.log("sample User endpoitn");
-//   res.status(200);
-// });
-// router.delete("/v1/User", (req, res, next) => {
-//   console.log("sample User endpoitn");
-//   res.status(200);
-// });
-
-
-
-
-// router.get("/v1/Event", (req, res, next) => {
-//   console.log("sample User endpoitn");
-//   res.status(200);
-// });
-
-
-
-// router.get("/v1/UserEvents", (req, res, next) => {
-//   console.log("sample User endpoitn");
-//   res.status(200);
-// });
-
-
-
-// router.get("/v1/UserFriends", (req, res, next) => {
-//   console.log("sample User endpoitn");
-//   res.status(200);
-// });
-// module.exports = router;

@@ -11,6 +11,7 @@ function createErr(errInfo){
   };
 }
 const userController = {};
+
 // create a user
 userController.createUser = async (req, res, next) => {
   if(!req.body){
@@ -19,15 +20,17 @@ userController.createUser = async (req, res, next) => {
         type: 'Failed to get data from req.body',
         err: 'userController.getUser: ERROR: Incorrect data received.'
     }))
+  };
+  if(res.locals.alreadyExists){
+    console.log('user already exists, skipping create')
+    return next()
   }
-  console.log('Request Body:\n', req.body);
-  const { fullName, email, picture, phoneNum } = req.body;
   try{
     const user = await User.create({
-      fullName: fullName,
-      email: email,
-      picture: picture,
-      phoneNum: phoneNum
+      fullName: req.body.fullName,
+      email: req.body.email,
+      picture: req.body.picture,
+      phoneNum: req.body.phoneNum
     })
     next();
   }  
@@ -49,18 +52,20 @@ userController.getUser = async (req, res, next) => {
           err: 'userController.getUser: ERROR: Incorrect data received.'
       }))
   }
-
-  console.log('Request Body:\n', req.body);
-  const query = `
-      SELECT * FROM Users 
-      WHERE fullName = :fullName
-  `;
   try{
-      const results = await sequelize.query(query, {
-          type: QueryTypes.SELECT,
-          replacements: { fullName: req.body.fullName }
-      });
-      res.locals.success = 'success'
+      const user = await User.findOne({where: {userID: req.body.userID}});
+      if(user === null){
+        res.locals.doesNotExist = true;
+        return next();
+      }
+      res.locals.user = {
+        userID: user.dataValues.userID,
+        fullName: user.dataValues.fullName,
+        email: user.dataValues.email,
+        picture: user.dataValues.picture,
+        phoneNum: user.dataValues.phoneNum
+      };
+      res.locals.doesNotExist = false;
       next();
   }
   catch(error){
@@ -70,7 +75,33 @@ userController.getUser = async (req, res, next) => {
           err: error.toString()
       }));
   }
-  next();
+}
+
+// get user to see if user already exists
+userController.userAlreadyExists = async (req, res, next) => {
+  if(!req.body){
+    return next(createErr({
+        method: 'userAlreadyExists',
+        type: 'Failed to get data from req.body',
+        err: 'userController.userAlreadyExists: ERROR: Incorrect data received.'
+    }))
+  }
+  try{
+    const user = await User.findOne({where: {email: req.body.email}});
+    if(!user || user === null){
+      res.locals.alreadyExists = false;
+      return next()
+    }
+    res.locals.alreadyExists = true;
+    return next();
+  }
+  catch(error){
+    next(createErr({
+        method: 'userAlreadyExists',
+        type: 'Database Query Error for Getting User',
+        err: error.toString()
+    }));
+  }
 }
 
 // update a user's info
@@ -83,55 +114,43 @@ userController.updateUser = async (req, res, next) => {
     }))
   }
   console.log('Request Body:\n', req.body);
-  
-  // depending on what's being updated, I need to make a mutable query string
+
   const data = {
-    userID: req.body.userID,
-    fullName: req.body.fullName,
-    email: req.body.email,
-    picture: req.body.picture,
-    phoneNum: req.body.phoneNum
+  userID: req.body.userID,
+  fullName: req.body.fullName,
+  email: req.body.email,
+  picture: req.body.picture,
+  phoneNum: req.body.phoneNum
+  };
+
+  const updateObj = {};
+  Object.entries(data).forEach(([key, value]) => {
+    if (value !== undefined) {
+      updateObj[key] = value;
+    }
+  });
+
+  try {
+    const result = await User.update(updateObj, {
+      where: { userID: req.body.userID }
+    });
+    console.log(result);
+    if (result[0] === 1) {
+      res.locals.message = 'changes were made'
+      next();
+    } 
+    else {
+      res.locals.message = 'changes could not be made, could not find userID'
+      next();
+    }
+  } 
+  catch(error){
+    next(createErr({
+        method: 'updateUser',
+        type: 'Database Query Error for Updating User',
+        err: error.toString()
+    }));
   }
-
-  // !need to fix updateController. Sequelize was not working
-
-  // const arr = [ "fullName", "email", "picture", "phoneNum"];
-  // const query = `
-  // UPDATE Users SET
-  // `
-  // const replacementArr = [];
-
-  // for(let i = 0; i < arr.length; i++){
-  //   if(data[arr[i]]){
-  //     replacementArr.push(arr[i]);
-  //     query += ` ${arr[i]} = ?,`
-  //   }
-  // }
-
-  // replacementArr.push(data[userID]);
-  // query = query.slice(0, -1);
-  // query += `WHERE userID = ?`;
-  
-  // try{
-  //   await sequelize.query(
-  //     query,
-  //     {
-  //       replacements: replacementArr,
-  //       type: QueryTypes.UPDATE
-  //     }
-  //   )
-  //   res.locals.success = 'success';
-  //   next();
-  // }
-  // catch(error){
-  //   next(createErr({
-  //     method: 'patchUser',
-  //     type: 'Database Query Error for Patching User',
-  //     err: error.toString()
-  //   }));
-  // }
-
-
 }
 
 // delete a user
@@ -143,10 +162,11 @@ userController.deleteUser = async (req, res, next) => {
         err: 'userController.getUser: ERROR: Incorrect data received.'
     }))
   }
-  console.log('Request Body:\n', req.body);
-  const { fullName, email } = req.body;
+  if(res.locals.doesNotExist){
+    return res.status(200).json({doesNotExist: true})
+  }
   try{
-    User.destroy({where: {fullName: fullName, email: email}});
+    User.destroy({where: {userID: req.body.userID}});
     next();
   }
   catch(error){
@@ -156,31 +176,6 @@ userController.deleteUser = async (req, res, next) => {
       err: error.toString()
     }))
   };
-  // ? Or we can delete by userID, since they're unique. But that would require obtaining the userID in a query beforehand.
-  // ? Unless it's stored somehow when the user logs
-  // const { userID } = req.body;
-  // const query = `
-  //   DELETE FROM Users WHERE userID = ?
-  // `
-  // try{
-  //   await sequelize.query(
-  //     query,
-  //     {
-  //       replacements: [userID],
-  //       type: QueryTypes.DELETE
-  //     }
-  //   );
-  //   res.locals.success = 'success';
-  //   next();
-  // }
-  // catch (error) {
-  //   next(createErr({
-  //     method: 'deleteUser',
-  //     type: 'Database Query Error for Deleting User',
-  //     err: error.toString()
-  // }))
-  // }
-
 }
 
 

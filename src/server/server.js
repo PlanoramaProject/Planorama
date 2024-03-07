@@ -10,18 +10,16 @@ if(dotenv.error) console.error(dotenv.error);
 
 const port = process.env.PORT;
 const pgUri = String(process.env.PGURI);
+require("dotenv").config();
 
-const sequelize = new Sequelize(
-  pgUri,
-  {
-    dialectOptions: {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false,
-      },
+const sequelize = new Sequelize(process.env.PGURI, {
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
     },
-  }
-);
+  },
+});
 
 app.use(express.json());
 
@@ -45,5 +43,7 @@ app.use((err, req, res, next) => {
 });
 
 
-app.listen(port, () => console.log("CONNECTED: listening on PORT", port));
+app.listen(process.env.PORT, () =>
+  console.log("CONNECTED: listening on PORT", process.env.PORT)
+);
 module.exports = app;

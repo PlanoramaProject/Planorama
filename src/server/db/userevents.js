@@ -1,20 +1,20 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const User = require("./user");
 const Event = require("./event");
-const sequelize = new Sequelize(
-  "postgresql://postgres:postgres@planoramadb.cuqfjshz1zj6.us-east-2.rds.amazonaws.com:5432/",
-  {
-    dialectOptions: {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false,
-      },
+require("dotenv").config();
+const { pg } = require("pg");
+const sequelize = new Sequelize(process.env.PGURI, {
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
     },
-  }
-);
+  },
+});
 const UserEvents = sequelize.define("UserEvents", {
   userID: {
     type: DataTypes.UUID,
+    allowNull: false,
     references: {
       model: User,
       key: "userID",
@@ -23,6 +23,7 @@ const UserEvents = sequelize.define("UserEvents", {
   },
   eventID: {
     type: DataTypes.UUID,
+    allowNull: false,
     references: {
       model: Event,
       key: "eventID",

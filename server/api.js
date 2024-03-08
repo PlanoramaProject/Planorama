@@ -40,7 +40,7 @@ router.get("/v1/event/:eventID", eventController.getEvent, (req, res, next) => {
   res.status(200).json(res.locals.event);
 });
 
-router.post("/v1/event", eventController.createEvent, (req, res, next) => {
+router.post("/v1/getEvent", eventController.createEvent, (req, res, next) => {
   return res.status(200).json(res.locals.event);
 });
 router.put("/v1/event", eventController.updateEvent, (req, res, next) => {
@@ -49,5 +49,9 @@ router.put("/v1/event", eventController.updateEvent, (req, res, next) => {
 router.delete("/v1/event", eventController.deleteEvent, (req, res, next) => {
   res.status(200);
 });
+
+router.post('/test', (req, res, next) => {
+  console.log('request body', req.body)
+})
 
 module.exports = router;

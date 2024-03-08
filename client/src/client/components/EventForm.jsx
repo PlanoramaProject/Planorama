@@ -47,7 +47,13 @@ function EventForm() {
         document.getElementById('eventDetails').reset();
         const data = Object.fromEntries(formData);
         console.log(data);
-        fetch("/api/v1/user/all")
+        fetch("/api/v1/getEvent", {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+              },
+            body: JSON.stringify(data),
+        })
         .then((res) => {
             return res.json();
         })

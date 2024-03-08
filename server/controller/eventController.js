@@ -3,6 +3,7 @@ const { User, Event, UserFriends, UserEvents } = require("../db/associations");
 const eventController = {};
 
 eventController.createEvent = async (req, res, next) => {
+  console.log('req body', req.body)
   const {
     eventName,
     hostName,

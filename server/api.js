@@ -10,6 +10,7 @@ router.get("/v1/user", userController.getUser, (req, res) => {
 });
 
 router.get("/v1/user/all", async (req,res) => {
+  console.log('connected to front end')
   const users = await User.findAll();
   res.status(200).send(users);
 })

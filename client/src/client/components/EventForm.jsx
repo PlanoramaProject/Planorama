@@ -18,7 +18,7 @@ function EventForm() {
     // set state for confirm signup modal
     const [confrimSignupModal, setConfirmSignupModal] = useState(false);
     // set userId state (which determines which version of components display)
-    const [userId, setUserId] = useState(undefined);
+    const [userId, setUserId] = useState(123);
     const [match, setMatch] = useState('gray');
 
     // functions that reset modal states to false when they're closed out
@@ -47,7 +47,12 @@ function EventForm() {
         document.getElementById('eventDetails').reset();
         const data = Object.fromEntries(formData);
         console.log(data);
-        // const response = await fetch('/api/createEvent', {
+        fetch("/api/v1/user/all")
+        .then((res) => {
+            return res.json();
+        })
+        .then((data) => console.log(data))
+
         //     method: 'POST',
         //     body: JSON.stringify(data),
         // })

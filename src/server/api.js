@@ -1,10 +1,15 @@
 const express = require("express");
+const passport = require("passport");
+
 const router = express.Router();
 const { eventController } = require("../server/controller/eventController");
 const {
   userEventController,
 } = require("../server/controller/userEventsController");
-// const { User, Event, UserFriends, UserEvents } = require("./db/associations");
+const {
+  authenticationController,
+} = require("../server/controller/authenticationController");
+const { aiController } = require("../server/controller/aiController");
 
 router.get("/v1/event/:eventID", eventController.getEvent, (req, res, next) => {
   res.status(200).json(res.locals.event);
@@ -50,6 +55,40 @@ router.post(
   (req, res, next) => {
     res.status(200).json(res.locals.event);
   }
+);
+
+router.post(
+  "/v1/event/prompt",
+  aiController.generateMessage,
+  (req, res, next) => {
+    res.status(200).json({ message: "Ok!" });
+  }
+);
+
+// Test endpoint to be deleted before push
+
+router.post(
+  "/testCreateUser",
+  authenticationController.testCreateUser,
+  (req, res, next) => {
+    res.status(200).json({ message: "Ok!" });
+  }
+);
+
+// router.post(
+//   "/testVerify",
+//   authenticationController.verify,
+//   (req, res, next) => {
+//     res.status(200).json({ message: "Ok!" });
+//   }
+// );
+router.post(
+  "/login/password",
+  passport.authenticate("local", {
+    successReturnToOrRedirect: "/",
+    failureRedirect: "/login",
+    failureMessage: true,
+  })
 );
 
 module.exports = router;

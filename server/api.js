@@ -50,4 +50,9 @@ router.delete("/v1/event", eventController.deleteEvent, (req, res, next) => {
   res.status(200);
 });
 
+router.post('/test', (req, res, next) => {
+  console.log('test worked');
+  res.sendStatus(200);
+})
+
 module.exports = router;

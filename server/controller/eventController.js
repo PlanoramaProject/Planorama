@@ -5,6 +5,7 @@ const eventController = {};
 console.log('event controller')
 
 eventController.createEvent = async (req, res, next) => {
+  console.log('req body', req.body);
   const {
     eventName,
     hostName,

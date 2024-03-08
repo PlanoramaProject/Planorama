@@ -92,15 +92,15 @@ function EventForm() {
         if (editStatus === true) {
             document.getElementById('eventDetails').reset();
         
-        const response = await fetch('api/v1/event', {
-            method: 'POST',
-            body: JSON.stringify(data),
+        fetch('/api/test/', {
+            method: "POST",
             headers: {
                 "Content-Type": "application/json",
               },
+              body: JSON.stringify(data),
         })
-        const res = await response.json();
-        console.log(res);
+        // const res = await response.json();
+        // console.log(res);
         }
     }
 

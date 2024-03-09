@@ -1,6 +1,7 @@
 import { Routes, Route, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { Button, TextInput, Label } from 'flowbite-react';
+import NavBar from './NavBar';
 
 function Event() {
 
@@ -138,6 +139,10 @@ function Event() {
     if (!user.host) {  
         return (
             <div className="w-full h-screen p-12">
+            <div>
+                <NavBar />
+            </div>
+            <div className='pl-48'>
             <br></br>
             <br></br>
                 <div className='flex justify center'>
@@ -174,13 +179,18 @@ function Event() {
                 </div>
             </div>
             </div>
+            </div>
     )  
     
     } else if (!edit) {
         return(
             <div className="w-full h-screen p-12">
+                <div>
+                    <NavBar />
+                </div>
                 <br></br>
                 <br></br>
+                <div className='pl-48'>
                 <div className='flex justify-center'>
                 <div className='w-1/3 border border-slate-700 bg-gradient-to-tl from-red-100 to-white rounded-md p-6 shadow-lg'>
                 <h2 className='text-center text-slate-800 text-3xl'>You're invited to: <u>{data.eventName}</u>!</h2>
@@ -219,6 +229,7 @@ function Event() {
                         </div>
                     </div>
                 </div>
+            </div>
             </div>
             </div>
         )

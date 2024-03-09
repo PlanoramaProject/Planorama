@@ -25,18 +25,22 @@ function NavBar() {
     //       </Navbar.Collapse>
     //     </Navbar>
     //   );
-
-<aside class="fixed top-0 left-0 w-64 h-full" aria-label="Sidenav">
-  <div class="overflow-y-auto py-5 px-3 h-full bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+<aside class="fixed top-0 left-0 w-48 h-full" aria-label="Sidenav">
+  <div class="overflow-y-auto py-5 px-3 h-full bg-gradient-to-bl from-pink-50 to-indigo-50 border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700">
       <ul class="space-y-2">
           <li>
-              <a class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group" href="#">
-                  Overview
+              <a class="flex items-center p-2 pt-12 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group" href="/profile">
+                  Profile
               </a>
           </li>
           <li>
-              <a class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group" href="#">
-                  Pages
+              <a class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group" href="/">
+                  Create New Event
+              </a>
+          </li>
+          <li>
+              <a class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group" href="/">
+                  Sign Out
               </a>
           </li>
       </ul>

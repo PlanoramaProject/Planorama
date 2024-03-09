@@ -8,13 +8,17 @@ function Event() {
 
 // need this route to retern event details AND current user details
     // async function getEvent(){
-    //     const res = await fetch('/api/eventDetail/{id}', {
-    // })
-    //     const resData = await res.json();
-    //     setData(resData.event)
-    //     setPrevData(resData.event)
-    //     setUser(resData.user)
-    // }
+    //     setPrevData(data);
+    //     fetch(`/api//v1/event/{id}`)
+    //         .then((res) => res.json())
+    //         .then(data) => {
+    //              let locArr = data.location.split(',');
+    //              data.street = locArr[0];
+    //              data.city = locArr[1];
+    //              data.state = locArr[2];
+    //              data.zip = locArr[3];
+                    // setData(data);
+                // }
 
     // useEffect(() => {
     //     getEvent();
@@ -22,68 +26,75 @@ function Event() {
 
 
     const [data, setData] = useState({
-        name:'Eclipse Party',
-        address: '1234 Sundown Drive',
+        eventName:'Eclipse Party',
+        street: '1234 Sundown Drive', 
         city: 'Indianapolis',
-        state: 'IN',
+        state: 'IN', 
         zip: '55994',
         date: '04/08/2024',
-        time: '14:00:00 EDT',
+        startTime: '14:00:00 EDT',
+        endTime: '14:00:00 EDT',
         description: 'Join us to celebrate the spring and view the full solar eclipse with a barbecue and yard games. Eclipse glasses will be proivded, but BYOB!',
         guests: ['test@test.com', 'friend@email.com'],
-        host:'Dane Smith',
+        hostName:'Dane Smith',
+        capacity:'',
     })
     const [prevData, setPrevData] = useState({
-        name:'',
-        address:'',
+        eventName:'',
+        street:'',
         city:'',
-        state: '',
+        state:'',
         zip:'',
         date:'',
-        time:'',
+        startTime:'',
+        endTime:'',
         description:'',
         guests:'',
-        host:'',
+        hostName:'',
+        capacity:'',
     })
     //delete this for prod
-   // setPrevData(data);
+    //setPrevData(data);
     const [user, setUser] = useState({host: true})
     const [edit, setEdit] = useState(false);
     const [validated, setValidated] = useState({
-        name: 'gray',
-        address:'gray',
+        eventName: 'gray',
+        street:'gray',
         city:'gray',
         state:'gray',
         zip:'gray',
         date:'gray',
-        time:'gray',
+        startTime:'gray',
+        endTime:'gray',
     });
     const [required, setRequired] = useState({
-        name: '',
+        eventName: '',
         address:'',
         city:'',
         state:'',
         zip:'',
         date:'',
-        time:'',
+        startTime:'',
+        endTime:'',
     });
-    const cityState = data.city + ", " + data.state;
-    let editStatus = true;
+    
+
 
     async function handleClick(e) {
+        console.log('handle click')
+        let editStatus = true;
         e.preventDefault();
-        console.log('click')
         let formData = new FormData(document.getElementById('eventDetails'));
         const updatedEvent = Object.fromEntries(formData);
-        updatedEvent.host = data.host;
+        updatedEvent.hostName = data.hostName;
         document.getElementById('eventDetails').reset();
         setPrevData(data)
-        console.log('updatedEvent', updatedEvent)
+
         for (let key in updatedEvent) {
-            if (updatedEvent[key] === '' && key !== 'emails' && key !== 'description') {
+            if (updatedEvent[key] === '' && key !== 'emails' && key !== 'description' && key !== 'capacity') {
                 editStatus = false;
                 setValidated((prev) => ({...prev, [key]:'failure'}));
-                setData(updatedEvent);
+                setData(updatedEvent); 
                 let firstLetter = [key].toString()[0];
                 let firstLetterCap = firstLetter.toUpperCase()
                 let remainingLetters = [key].toString().slice(1);
@@ -95,6 +106,7 @@ function Event() {
             }
         }
         if (editStatus) {
+
             setData(Object.assign(updatedEvent));
 
             for (let key in data) {
@@ -102,25 +114,34 @@ function Event() {
                 setValidated((previous) => ({...previous, [key]:'gray'}))
             }
 
-        setEdit(false);
+            setEdit(false);
+            updatedEvent.location = updatedEvent.street + ',' + updatedEvent.city + ',' + updatedEvent.state + ',' + updatedEvent.zip; 
 
-        // const response = await fetch('/api/createEvent', {
-        //     method: 'POST',
-        //     body: JSON.stringify(data),
-        // })
-        // const res = await response.json();
-        // console.log(res);
+            console.log('fetch');
+            fetch('/api/v1/event', {
+                method: 'PUT',
+                body: JSON.stringify(updatedEvent),
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            })
 
         }
     }
 
+    async function deleteClick() {
+        fetch(`/api/v1/event/${id}`, {
+            method: 'DELETE',
+        })
+    }
+
     if (!user.host) {  
         return (
-            <div className="w-full h-screen bg-unfocused-lights bg-cover p-12">
+            <div className="w-full h-screen p-12">
             <br></br>
             <br></br>
                 <div className='w-fit border border-slate-700 bg-gradient-to-tl from-red-100 to-white rounded-md p-6 shadow-lg'>
-                    <h2 className='"text-slate-800 text-3xl'>You're invited to: {data.name}!</h2>
+                    <h2 className='"text-slate-800 text-3xl'>You're invited to: <u>{data.eventName}</u>!</h2>
                 </div>
                 <br></br>
                 <br></br>
@@ -129,16 +150,16 @@ function Event() {
                         <div className="grid grid-cols-2 gap-0">
                             <div className="w-1/3">
                                 <label className='pb-2'>Host:</label>
-                                <h3 type="text" name="address" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-10 w-80 text-md rounded-md">{data.host}</h3>
+                                <h3 type="text" name="hostName" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-10 w-80 text-md rounded-md">{data.hostName}</h3>
                                 <br></br>
-                                <label className='pb-2'>date:</label>
-                                <h3 type="text" name="city" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-10 w-80 text-md rounded-md">{data.date}</h3>
+                                <label className='pb-2'>Date:</label>
+                                <h3 type="text" name="date" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-10 w-80 text-md rounded-md">{data.date}</h3>
                                 <br></br>
                                 <label className='pb-2'>Time:</label>
-                                <h3 type="text" name="state" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-10 w-80 text-md rounded-md">{data.time}</h3>
+                                <h3 type="text" name="startTime" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-10 w-80 text-md rounded-md">{data.startTime} - {data.endTime}</h3>
                                 <br></br>
-                                <label className='pb-2'>Address:</label>
-                                <h3 type="text" name="zip" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-fit w-80 text-md rounded-md p-2">{data.address}<br></br>{cityState}<br></br>{data.zip}</h3>
+                                <label className='pb-2'>Location:</label>
+                                <h3 type="text" name="zip" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-fit w-80 text-md rounded-md p-2">{data.street}<br></br>{data.city}, {data.state}<br></br>{data.zip}</h3>
                                 <br></br>
                                 </div>
                                 <div className="w-2/3">
@@ -157,7 +178,7 @@ function Event() {
                 <br></br>
                 <br></br>
                 <div className='w-fit border border-slate-700 bg-gradient-to-tl from-red-100 to-white rounded-md p-6 shadow-lg'>
-                <h2 className='"text-slate-800 text-3xl'>You're invited to: {data.name}!</h2>
+                <h2 className='"text-slate-800 text-3xl'>You're invited to: <u>{data.eventName}</u>!</h2>
                 </div>
                 <br></br>
                 <br></br>
@@ -166,16 +187,16 @@ function Event() {
                         <div className="grid grid-cols-2 gap-0">
                             <div className="w-1/3">
                                 <label className='pb-2'>Host:</label>
-                                <h3 type="text" name="address" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-10 w-80 text-md rounded-md">{data.host}</h3>
+                                <h3 type="text" name="hostName" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-10 w-80 text-md rounded-md">{data.hostName}</h3>
                                 <br></br>
                                 <label className='pb-2'>date:</label>
-                                <h3 type="text" name="city" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-10 w-80 text-md rounded-md">{data.date}</h3>
+                                <h3 type="text" name="date" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-10 w-80 text-md rounded-md">{data.date}</h3>
                                 <br></br>
                                 <label className='pb-2'>Time:</label>
-                                <h3 type="text" name="state" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-10 w-80 text-md rounded-md">{data.time}</h3>
+                                <h3 type="text" name="startTime" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-10 w-80 text-md rounded-md">{data.startTime} - {data.endTime}</h3>
                                 <br></br>
-                                <label className='pb-2'>Address:</label>
-                                <h3 type="text" name="zip" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-fit w-80 text-md  rounded-md p-2">{data.address}<br></br>{cityState}<br></br>{data.zip}</h3>
+                                <label className='pb-2'>Location:</label>
+                                <h3 type="text" name="location" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-fit w-80 text-md  rounded-md p-2">{data.street}<br></br>{data.city}, {data.state}<br></br>{data.zip}</h3>
                                 <br></br>
                                 <div className="pt-6">
                                 <button name='edit' onClick={() => {
@@ -196,23 +217,24 @@ function Event() {
 
     } else {
         return (
-            <div className="w-full h-screen bg-unfocused-lights bg-cover p-12">
+            <div className="w-full h-screen bg-unfocused-lights bg-cover pt-6 pl-12">
                 <br></br>
                 <br></br>
-            <div className='w-fit border border-slate-700 bg-gradient-to-tl from-red-100 to-white rounded-md p-6 shadow-lg'>
+            <div className='w-fit border border-slate-700 bg-gradient-to-tl from-red-100 to-white rounded-md p-4 shadow-lg'>
                 <h2 className='text-3xl'>Edit Your Event</h2>
             </div>
             <br></br>
             <br></br>
-            <div className="w-fit border bg-gradient-to-br from-red-100 to-emerald-100 border-gray-700 rounded-md p-8 shadow-xl">
+            <div className='pb-12'>
+            <div className="w-fit border bg-gradient-to-br from-red-100 to-emerald-100 border-gray-700 rounded-md p-6 shadow-xl">
             <form id="eventDetails" onSubmit={handleClick} className="p-4 pr-8">
-                <div className="grid grid-cols-2 gap-0">
+                <div className="grid grid-cols-2 gap-0 relative">
                 <div className="w-1/3">
-                <Label className="w-fit">{required.name}</Label>
-                <TextInput type="text" name="name" color={validated.name} className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-xl h-10 w-80 text-md rounded-md" defaultValue={data.name}></TextInput>
+                <Label className="w-fit">{required.eventName}</Label>
+                <TextInput type="text" name="eventName" color={validated.eventName} className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-xl h-10 w-80 text-md rounded-md" defaultValue={data.eventName}></TextInput>
                 <br></br>
-                <Label className="w-fit">{required.address}</Label>
-                <TextInput type="text" name="address" color={validated.address} className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-xl h-10 w-80 text-md rounded-md" defaultValue={data.address}></TextInput>
+                <Label className="w-fit">{required.street}</Label>
+                <TextInput type="text" name="street" color={validated.street} className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-xl h-10 w-80 text-md rounded-md" defaultValue={data.street}></TextInput>
                 <br></br>
                 <Label className="w-fit">{required.city}</Label>
                 <TextInput type="text" name="city" color={validated.city} className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-xl h-10 w-80 text-md rounded-md" defaultValue={data.city}></TextInput>
@@ -226,8 +248,13 @@ function Event() {
                 <Label className="w-fit">{required.date}</Label>
                 <TextInput type="text" name="date" color={validated.date} className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-xl h-10 w-80 text-md rounded-md" defaultValue={data.date}></TextInput>
                 <br></br>
-                <Label className="w-fit">{required.time}</Label>
-                <TextInput type="text" name="time" color={validated.time} className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-xl h-10 w-80 text-md rounded-md" defaultValue={data.time}></TextInput>
+                <Label className="w-fit">{required.startTime}</Label>
+                <TextInput type="text" name="startTime" color={validated.startTime} className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-xl h-10 w-80 text-md rounded-md" defaultValue={data.startTime}></TextInput>
+                <br></br>
+                <Label className="w-fit">{required.endTime}</Label>
+                <TextInput type="text" name="endTime" color={validated.endTime} className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-xl h-10 w-80 text-md rounded-md" defaultValue={data.endTime}></TextInput>
+                <br></br>
+                <TextInput type="text" name="capacity" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-xl h-10 w-80 text-md rounded-md" placeholder='Capacity' defaultValue={data.capacity}></TextInput>
                 <br></br>
                 <br></br>
                 <button type="submit" className="text-black border border-black bg-pink-200 hover:bg-pink-500 hover:text-white rounded-md w-80 text-md shadow-xl p-2 font-bold">Save Changes</button>
@@ -248,10 +275,13 @@ function Event() {
                 <br></br>
                 <textarea name="emails" className="text-gray-500 focus:ring-0 focus:border-sky-600 border-0 shadow-lg w-96 text-md pt-1 pb-1 h-48 rounded-md" placeholder="Invite guests (bff@test.com, friend@email.com)"></textarea>
                 <br></br>
-                <br></br>
+                <div className=''>
+                <button type="button" onClick={deleteClick} className="text-black border border-black bg-pink-200 hover:bg-pink-500 hover:text-white rounded-md w-80 text-md shadow-xl p-2 font-bold absolute bottom-0 right-0">Delete Event</button>
+                </div>
                 </div>
                 </div>
             </form>
+        </div>
         </div>
         </div>
     )

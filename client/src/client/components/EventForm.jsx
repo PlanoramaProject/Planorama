@@ -14,7 +14,7 @@ function EventForm() {
     const [emailValid, setEmailValid] = useState('gray');
     const [emailValidLabel, setEmailValidLabel] = useState('');
     const [passwordValid, setPasswordValid] = useState('gray');
-    let continueLogin = true;
+    const [passwordValidLabel, setPasswordValidLabel] = useState('');
     // set state for newEmail, newPassword, confirmPassword (new users)
     const [newEmail, setNewEmail] = useState('');
     const [newPassword, setNewPassword] = useState('');
@@ -24,20 +24,20 @@ function EventForm() {
     const [newPasswordValid, setNewPasswordValid] = useState('gray')
     const [newUsernameValid, setNewUsernameValid] = useState('gray')
     // const [createUserSuccess, setCreateUserSuccess] = useState(true);
-    let createUserSuccess = true;
     // set state for confirm signup modal
     const [confrimSignupModal, setConfirmSignupModal] = useState(false);
     // set userId state (which determines which version of components display)
-    const [userId, setUserId] = useState(123);
+    const [userId, setUserId] = useState(12345);
     const [match, setMatch] = useState('gray');
     const [validated, setValidated] = useState({
-        name: 'gray',
+        eventName: 'gray',
         address:'gray',
         city:'gray',
         state:'gray',
         zip:'gray',
         date:'gray',
-        time:'gray',
+        startTime:'gray',
+        endTime:'gray',
     });
     const [required, setRequired] = useState({
         name: '',
@@ -46,7 +46,8 @@ function EventForm() {
         state:'',
         zip:'',
         date:'',
-        time:'',
+        startTime:'',
+        endTime:'',
     });
     let editStatus = true;
 
@@ -71,14 +72,15 @@ function EventForm() {
 
     // function to handle the submit button on create event form
     async function handleClick(e) {
-        console.log('handleClick')
         editStatus = true;
         e.preventDefault();
         let formData = new FormData(document.getElementById('eventDetails'));
         const data = Object.fromEntries(formData);
+        data.location = data.address + "," + data.city + "," + data.state + "," + data.zip;
+        data.hostName = 'Dane Smith';
 
         for (let key in data) {
-            if (data[key] === '' && key!== 'description' && key!== 'emails') {
+            if (data[key] === '' && key!== 'description' && key!== 'emails'&& key!== 'capacity') {
                 console.log('empty value')
                 editStatus = false;
                 setValidated((prev) => ({...prev, [key]:'failure'}));
@@ -92,7 +94,7 @@ function EventForm() {
         if (editStatus === true) {
             document.getElementById('eventDetails').reset();
         
-        fetch('/api/test/', {
+        fetch('/api/v1/event', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -106,32 +108,42 @@ function EventForm() {
 
     // function to handle the submit button on login form
     async function handleLogin() {
+        let continueLogin = true;
+
         if (email === '' || !email.includes('@')) {
             setEmailValid('failure')
+            setEmailValidLabel('Please enter a valid email')
             continueLogin = false;
         } else {
             setEmailValid('success')
+            setEmailValidLabel('')
         }
         if (password === '') {
             setPasswordValid('failure')
+            setPasswordValidLabel('* Required')
             continueLogin = false;
         } else {
             setPasswordValid('success')
+            setPasswordValidLabel('')
         }
         if (continueLogin) {
-        const loginCreds = {
+            
+            const loginCreds = {
             email: email,
-            password: password
-        }
-        setEmailValid('gray');
-        setPasswordValid('gray');
-        setEmail('');
-        setPassword('');
-        setOpenModal(false)
+            password: password,
+            }
+
+            setEmailValid('gray');
+            setPasswordValid('gray');
+            setEmail('');
+            setPassword('');
+            setOpenModal(false)
     }}
 
     // function to handle submit button on create new account form
     async function handleCreateUser() {
+        let createUserSuccess = true;
+
         if (newPassword !== confirmPassword) {
             setErrorModal(true)
         }
@@ -155,17 +167,21 @@ function EventForm() {
         } else {
             setNewPasswordValid('success')
         }
+
         if (createUserSuccess === true) {
-        const userCreds = {
-            email: newEmail,
-            password: newPassword
-        }
-        setCreateUserModal(false);
-        setConfirmSignupModal(true);
-        setNewEmailValid('gray');
-        setNewUsernameValid('gray');
-        setNewPasswordValid('gray');
-        setMatch('gray');
+
+            const userCreds = {
+                name: newUsername,
+                email: newEmail,
+                password: newPassword,
+            }
+
+            setCreateUserModal(false);
+            setConfirmSignupModal(true);
+            setNewEmailValid('gray');
+            setNewUsernameValid('gray');
+            setNewPasswordValid('gray');
+            setMatch('gray');
         }
     }
 
@@ -199,8 +215,8 @@ function EventForm() {
             <form id="eventDetails" onSubmit={handleClick} className="p-4 pr-8">
                 <div className="grid grid-cols-2 gap-0">
                 <div className="w-1/3">
-                <Label className="w-fit">{required.name}</Label>
-                <TextInput type="text" name="name" color={validated.name} className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-10 w-80 rounded-md" placeholder="Event Name"></TextInput>
+                <Label className="w-fit">{required.eventName}</Label>
+                <TextInput type="text" name="eventName" color={validated.eventName} className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-10 w-80 rounded-md" placeholder="Event Name"></TextInput>
                 <br></br>
                 <Label className="w-fit">{required.address}</Label>
                 <TextInput type="text" name="address" color={validated.address} className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-10 w-80 rounded-md" placeholder="Street Address"></TextInput>
@@ -217,8 +233,13 @@ function EventForm() {
                 <Label className="w-fit">{required.date}</Label>
                 <TextInput type="text" name="date" color={validated.date} className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-10 w-80 rounded-md" placeholder="Date (03/17/2024)"></TextInput>
                 <br></br>
-                <Label className="w-fit">{required.time}</Label>
-                <TextInput type="text" name="time" color={validated.time} className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-10 w-80 rounded-md" placeholder="Time (19:30 EST)"></TextInput>
+                <Label className="w-fit">{required.startTime}</Label>
+                <TextInput type="text" name="startTime" color={validated.startTime} className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-10 w-80 rounded-md" placeholder="Start Time (19:30 EST)"></TextInput>
+                <br></br>
+                <Label className="w-fit">{required.endTime}</Label>
+                <TextInput type="text" name="endTime" color={validated.endTime} className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-10 w-80 rounded-md" placeholder="End Time (23:30 EST)"></TextInput>
+                <br></br>
+                <TextInput type="text" name="capacity" color="" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-10 w-80 rounded-md" placeholder="Capacity"></TextInput>
                 <br></br>
                 <button type="submit" className="text-black border border-black bg-pink-200 hover:bg-pink-500 hover:text-white rounded-md w-80 shadow-lg p-2 font-bold">Create Event and Send Invites</button>
                 <br></br>
@@ -226,10 +247,10 @@ function EventForm() {
                 <button type="button" onClick={cancelClick} className="text-black border border-black bg-pink-200 hover:bg-pink-500 hover:text-white rounded-md w-80 shadow-lg p-2 font-bold">Cancel</button>
                 </div>
                 <div className="w-2/3">
-                <textarea name="description" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg w-96 pt-1 pb-1 h-48 rounded-md" placeholder="Event Description ..."></textarea>
+                <textarea name="description" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg w-96 pt-1 pb-1 h-64 rounded-md" placeholder="Event Description ..."></textarea>
                 <br></br>
                 <br></br>
-                <textarea name="emails" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg w-96 pt-1 pb-1 h-48 rounded-md" placeholder="Invite friends (bff@test.com, friend@email.com)"></textarea>
+                <textarea name="emails" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg w-96 pt-1 pb-1 h-60 rounded-md" placeholder="Invite friends (bff@test.com, friend@email.com)"></textarea>
                 <br></br>
                 <br></br>
                 </div>
@@ -244,19 +265,20 @@ function EventForm() {
             <div id="exampleEvent" onSubmit={(handleClick)} className="p-4 pr-8">
                 <div className="grid grid-cols-2 gap-0">
                 <div className="w-1/3">
-                <h3 type="text" name="name" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-10 w-80 rounded-md">Eclipse Party 2024</h3>
+                <label>Event name:</label>
+                <h3 type="text" name='eventName' className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-10 w-80 rounded-md">Eclipse Party 2024</h3>
                 <br></br>
-                <h3 type="text" name="address" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-10 w-80 rounded-md">123 Sundown Street</h3>
+                <label>Hosted by:</label>
+                <h3 type="text" name="address" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-10 w-80 rounded-md">John Doe</h3>
                 <br></br>
-                <h3 type="text" name="city" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-10 w-80 rounded-md">Indianapolis</h3>
+                <label>Date:</label>
+                <h3 type="text" name="city" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-fit w-80 rounded-md">04/08/2024</h3>
                 <br></br>
-                <h3 type="text" name="state" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-10 w-80 rounded-md">IN</h3>
+                <label>Time:</label>
+                <h3 type="text" name="state" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-10 w-80 rounded-md">2:00pm - 10:00pm EDT</h3>
                 <br></br>
-                <h3 type="text" name="zip" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-10 w-80 rounded-md">12345</h3>
-                <br></br>
-                <h3 type="text" name="date" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-10 w-80 rounded-md">04/08/2024</h3>
-                <br></br>
-                <h3 type="text" name="time" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-10 w-80 rounded-md">14:00 EDT</h3>
+                <label>Location:</label>
+                <h3 type="text" name="zip" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-fit w-80 rounded-md">123 Sundown Street<br></br>Indianapolis, IN<br></br>55555</h3>
                 <br></br>
                 <button onClick={() => setOpenModal(true)} className="text-black border border-black bg-pink-200 hover:bg-pink-500 hover:text-white rounded-md w-80 shadow-lg p-2 font-bold">Login or Sign Up to Create New Event</button>
                 </div>
@@ -270,6 +292,7 @@ function EventForm() {
                     <div className="space-y-6">
                         <h3 className="text-xl font-medium text-gray-900 dark:text-white">Login to Your Account</h3>
                     <div>
+                    <label className='text-red-400'>{emailValidLabel}</label>
                     <TextInput
                         id="email"
                         placeholder="name@email.com"
@@ -280,6 +303,7 @@ function EventForm() {
                     />
                     </div>
                     <div>
+                    <label className='text-red-400'>{passwordValidLabel}</label>
                     <TextInput
                         id="password"
                         placeholder="password" 

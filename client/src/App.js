@@ -4,7 +4,7 @@ import "./App.css"
 function App() {
 
   return (
-    <div className="w-full h-screen bg-unfocused-lights bg-cover">
+    <div className="w-full h-full ">
     <div className='grid grid-cols-1 place-items-center pt-12 pl-8'>
     <h1 className="text-slate-800 text-3xl border rounded-lg border-slate-800 p-4 bg-gradient-to-tr from-white to-violet-100 w-1/3 text-center">Planorama ... the party starts here!</h1>
     </div>

@@ -49,6 +49,9 @@ router.put("/v1/event", eventController.updateEvent, (req, res, next) => {
 router.delete("/v1/event", eventController.deleteEvent, (req, res, next) => {
   res.status(200);
 });
+router.delete("/v1/event/:eventID", eventController.deleteEvent, (req, res, next) => {
+  res.status(200);
+});
 
 router.post('/test', (req, res, next) => {
   console.log('test worked');

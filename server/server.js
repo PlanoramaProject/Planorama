@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const router = require("./api");
-
+const path = require('path');
 const passport = require("passport");
 const session = require("express-session");
 require("./auth/passport-config")(passport);

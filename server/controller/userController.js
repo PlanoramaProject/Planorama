@@ -1,6 +1,6 @@
 const { User, Event, UserFriends, UserEvents, sequelize } = require("../db/associations");
 const { QueryTypes } = require('sequelize');
-
+const argon2 = require('argon2');
 
 
 function createErr(errInfo){
@@ -26,8 +26,10 @@ userController.createUser = async (req, res, next) => {
     return next()
   }
   try{
+    const hash = await argon2.hash(req.body.password);
     const user = await User.create({
       fullName: req.body.fullName,
+      password: hash,
       email: req.body.email,
       picture: req.body.picture,
       phoneNum: req.body.phoneNum
@@ -36,8 +38,8 @@ userController.createUser = async (req, res, next) => {
   }  
   catch(error){
     next(createErr({
-      method: 'postUser',
-      type: 'Database Query Error for Posting User',
+      method: 'createUser',
+      type: 'Database Query Error for Creating User',
       err: error.toString()
     }));
   }
@@ -118,6 +120,7 @@ userController.updateUser = async (req, res, next) => {
   const data = {
   userID: req.body.userID,
   fullName: req.body.fullName,
+  password: req.body.password,
   email: req.body.email,
   picture: req.body.picture,
   phoneNum: req.body.phoneNum

@@ -1,3 +1,4 @@
+
 module.exports = (sequelize, DataTypes) => {
   const UserEvents = sequelize.define("UserEvents", {
     userID: {
@@ -20,3 +21,4 @@ module.exports = (sequelize, DataTypes) => {
 
   return UserEvents;
 };
+

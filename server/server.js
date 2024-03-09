@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const router = require("./api");
+
 const passport = require("passport");
 const session = require("express-session");
 require("./auth/passport-config")(passport);
@@ -50,12 +51,16 @@ app.use((err, req, res, next) => {
     log: "Express error handler caught unknown middleware error in server.js",
     status: 400,
     message: { err: "An error occurred" },
+
   };
   const errorObj = Object.assign(defaultErr, err);
   console.error(errorObj.log);
   return res.status(errorObj.status || 500).json(errorObj.message);
 });
 
+
 app.listen(process.env.PORT, () =>
   console.log("CONNECTED: listening on PORT", process.env.PORT)
 );
+    
+module.exports = app;

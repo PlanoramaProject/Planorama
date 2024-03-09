@@ -1,6 +1,5 @@
 const express = require("express");
 const passport = require("passport");
-
 const router = express.Router();
 const { eventController } = require("../server/controller/eventController");
 const {
@@ -16,9 +15,11 @@ const { aiController } = require("../server/controller/aiController");
  *
  */
 
+
 router.get("/v1/user", userController.getUser, (req, res) => {
   res.status(200).json(res.locals.user);
 });
+
 
 router.get("/v1/user/all", async (req, res) => {
   const users = await User.findAll();
@@ -54,9 +55,11 @@ router.patch("/v1/user", userController.updateUser, (req, res) => {
 
 // end of merged code
 
+
 router.get("/v1/event/:eventID", eventController.getEvent, (req, res, next) => {
   res.status(200).json(res.locals.event);
 });
+
 
 router.get(
   "/v1/user/host/:userID/",
@@ -83,12 +86,13 @@ router.get(
 );
 
 router.post("/v1/event", eventController.createEvent, (req, res, next) => {
+
   return res.status(200).json(res.locals.event);
 });
 router.put("/v1/event", eventController.updateEvent, (req, res, next) => {
   res.status(200).json(res.locals.event);
 });
-router.delete("/v1/event", eventController.deleteEvent, (req, res, next) => {
+router.delete("/v1/event/:eventID", eventController.deleteEvent, (req, res, next) => {
   res.status(200);
 });
 
@@ -118,3 +122,4 @@ router.post(
 );
 
 module.exports = router;
+

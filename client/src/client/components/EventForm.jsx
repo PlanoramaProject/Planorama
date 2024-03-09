@@ -24,13 +24,16 @@ function EventForm() {
     const [newUsername, setNewUsername] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [newEmailValid, setNewEmailValid] = useState('gray')
+    const [newEmailValidLabel, setNewEmailValidLabel] = useState('')
     const [newPasswordValid, setNewPasswordValid] = useState('gray')
-    const [newUsernameValid, setNewUsernameValid] = useState('gray')
+    const [newPasswordValidLabel, setNewPasswordValidLabel] = useState('')
+    const [newUsernameValid, setNewUsernameValid] = useState('gray');
+    const [newUsernameValidLabel, setNewUsernameValidLabel] = useState('')
     // const [createUserSuccess, setCreateUserSuccess] = useState(true);
     // set state for confirm signup modal
     const [confrimSignupModal, setConfirmSignupModal] = useState(false);
     // set userId state (which determines which version of components display)
-    const [userId, setUserId] = useState(12345);
+    const [userId, setUserId] = useState(undefined);
     const [match, setMatch] = useState('gray');
     const [validated, setValidated] = useState({
         eventName: 'gray',
@@ -290,7 +293,14 @@ function EventForm() {
                 <label>Location:</label>
                 <h3 type="text" name="zip" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-fit w-80 rounded-md">123 Sundown Street<br></br>Indianapolis, IN<br></br>55555</h3>
                 <br></br>
-                <button onClick={() => setOpenModal(true)} className="text-black border border-black bg-pink-200 hover:bg-pink-500 hover:text-white rounded-md w-80 shadow-lg p-2 font-bold">Login or Sign Up to Create New Event</button>
+                <button onClick={() => {
+                    setOpenModal(true)
+                    setEmailValid('gray');
+                    setEmailValidLabel('')
+                    setPasswordValid('gray');
+                    setPasswordValidLabel('')
+                }} 
+                className="text-black border border-black bg-pink-200 hover:bg-pink-500 hover:text-white rounded-md w-80 shadow-lg p-2 font-bold">Login or Sign Up to Create New Event</button>
                 </div>
                 <div className="w-2/3">
                 <h3 name="description" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg w-96 pt-1 pb-1 h-48 rounded-md bg-white pl-4">Join us in the backyard for barbecue and drinks while we view the full solar eclipse! Viewing glasses will be provided for all. BYOB.</h3>
@@ -348,6 +358,7 @@ function EventForm() {
                     <div className="space-y-6">
                         <h3 className="text-xl font-medium text-gray-900 dark:text-white">Create User Account</h3>
                     <div>
+                    <label className='text-red-700'>{newUsernameValidLabel}</label>
                     <TextInput
                         id="username"
                         placeholder="John Doe"
@@ -358,7 +369,7 @@ function EventForm() {
                     />
                     </div>
                     <div>
-                    <label className='text-red-700'>{emailValidLabel}</label>
+                    <label className='text-red-700'>{newEmailValidLabel}</label>
                     <TextInput
                         id="email"
                         placeholder="name@email.com"
@@ -369,6 +380,7 @@ function EventForm() {
                     />
                     </div>
                     <div>
+                    <label className='text-red-700'>{newPasswordValidLabel}</label>
                     <TextInput
                         id="password"
                         placeholder="password" 

@@ -181,5 +181,25 @@ userController.deleteUser = async (req, res, next) => {
   };
 }
 
+userController.getAll = async (req, res, next) => {
+  if(!req.body){
+    return next(createErr({
+        method: 'getAll',
+        type: 'Failed to get data from req.body',
+        err: 'userController.getAll: ERROR: Incorrect data received.'
+    }))
+  }
+  try{
+    res.locals.users = await User.findAll();
+    next()
+  }
+  catch(error){
+    next(createErr({
+      method: 'getAll',
+      type: 'Database Query Error for Get All',
+      err: error.toString()
+    }))
+  };
+}
 
 module.exports = { userController };

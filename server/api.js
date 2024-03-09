@@ -8,7 +8,8 @@ const {
 const {
   authenticationController,
 } = require("../server/controller/authenticationController");
-const { aiController } = require("../server/controller/aiController");
+// const { aiController } = require("../server/controller/aiController");
+const { userController } = require('./controller/userController');
 const { userFriendsController } = require('./controller/userFriendsController');
 
 /**
@@ -23,9 +24,8 @@ router.get("/v1/user", userController.getUser, (req, res) => {
 });
 
 
-router.get("/v1/user/all", async (req, res) => {
-  const users = await User.findAll();
-  res.status(200).send(users);
+router.get("/v1/user/all", userController.getAll, (req, res) => {
+  res.status(200).json(res.locals.users);
 });
 
 router.post(
@@ -108,13 +108,13 @@ router.post(
   }
 );
 
-router.post(
-  "/v1/event/prompt",
-  aiController.generateMessage,
-  (req, res, next) => {
-    res.status(200).json({ message: "Ok!" });
-  }
-);
+// router.post(
+//   "/v1/event/prompt",
+//   aiController.generateMessage,
+//   (req, res, next) => {
+//     res.status(200).json({ message: "Ok!" });
+//   }
+// );
 
 router.post(
   "/login/password",

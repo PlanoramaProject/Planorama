@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const { eventController } = require("../server/controller/eventController");
 const { User, Event, UserFriends, UserEvents } = require("./db/associations");
-const { userController } = require('./controllers/userController');
+const { eventController } = require("../server/controller/eventController");
+const { userController } = require('./controller/userController');
 
 
 router.get("/v1/user", userController.getUser, (req, res) => {

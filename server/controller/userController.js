@@ -1,4 +1,4 @@
-const { User, Event, UserFriends, UserEvents, sequelize } = require("../db/associations");
+const { User, Event, UserFriends, UserEvents, sequelize } = require("../models/index");
 const { QueryTypes } = require('sequelize');
 const argon2 = require('argon2');
 

@@ -10,10 +10,17 @@
     "@testing-library/user-event": "^13.5.0",
     "argon2-browser": "^1.18.0",
     "concurrently": "^8.2.2",
+    "argon2": "^0.40.1",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.4.5",
+    "express-session": "^1.18.0",
     "dotenv": "^16.4.5",
     "express": "^4.18.3",
     "flowbite-react": "^0.7.2",
     "nodemon": "^3.1.0",
+    "openai": "^4.28.4",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
     "pg": "^8.11.3",
     "pg-hstore": "^2.3.4",
     "react": "^18.2.0",
@@ -21,15 +28,18 @@
     "react-router-dom": "^6.22.2",
     "react-scripts": "5.0.1",
     "sequelize": "^6.37.1",
+    "sequelize-cli": "^6.6.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "old-start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "server": "nodemon src/server/server.js",
     "eject": "react-scripts eject",
     "start": "concurrently \"react-scripts start\" \"cd ../server && node server.js\"",
     "fullInit": "npm install ; cd ../server && npm install"
+
   },
   "eslintConfig": {
     "extends": [

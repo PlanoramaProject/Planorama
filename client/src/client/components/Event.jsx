@@ -140,11 +140,14 @@ function Event() {
             <div className="w-full h-screen p-12">
             <br></br>
             <br></br>
-                <div className='w-fit border border-slate-700 bg-gradient-to-tl from-red-100 to-white rounded-md p-6 shadow-lg'>
-                    <h2 className='"text-slate-800 text-3xl'>You're invited to: <u>{data.eventName}</u>!</h2>
+                <div className='flex justify center'>
+                <div className='w-1/3 border border-slate-700 bg-gradient-to-tl from-red-100 to-white rounded-md p-6 shadow-lg'>
+                    <h2 className='text-center text-slate-800 text-3xl'>You're invited to: <u>{data.eventName}</u>!</h2>
+                </div>
                 </div>
                 <br></br>
                 <br></br>
+                <div className='flex justify-center'>
                 <div className="w-fit border bg-gradient-to-br from-red-100 to-emerald-100 border-gray-700 rounded-md p-8 shadow-xl">
                     <div id="exampleEvent" className="p-4 pr-8">
                         <div className="grid grid-cols-2 gap-0">
@@ -170,18 +173,22 @@ function Event() {
                     </div>
                 </div>
             </div>
+            </div>
     )  
     
     } else if (!edit) {
         return(
-            <div className="w-full h-screen bg-unfocused-lights bg-cover p-12">
+            <div className="w-full h-screen p-12">
                 <br></br>
                 <br></br>
-                <div className='w-fit border border-slate-700 bg-gradient-to-tl from-red-100 to-white rounded-md p-6 shadow-lg'>
-                <h2 className='"text-slate-800 text-3xl'>You're invited to: <u>{data.eventName}</u>!</h2>
+                <div className='flex justify-center'>
+                <div className='w-1/3 border border-slate-700 bg-gradient-to-tl from-red-100 to-white rounded-md p-6 shadow-lg'>
+                <h2 className='text-center text-slate-800 text-3xl'>You're invited to: <u>{data.eventName}</u>!</h2>
+                </div>
                 </div>
                 <br></br>
                 <br></br>
+                <div className='flex justify-center'>
                 <div className="w-fit border bg-gradient-to-br from-red-100 to-emerald-100 border-gray-700 rounded-md p-8 shadow-xl">
                     <div id="exampleEvent" className="p-4 pr-8">
                         <div className="grid grid-cols-2 gap-0">
@@ -213,6 +220,7 @@ function Event() {
                     </div>
                 </div>
             </div>
+            </div>
         )
 
     } else {
@@ -220,12 +228,14 @@ function Event() {
             <div className="w-full h-screen bg-unfocused-lights bg-cover pt-6 pl-12">
                 <br></br>
                 <br></br>
-            <div className='w-fit border border-slate-700 bg-gradient-to-tl from-red-100 to-white rounded-md p-4 shadow-lg'>
-                <h2 className='text-3xl'>Edit Your Event</h2>
+            <div className='flex justify-center'>
+            <div className='w-1/3 border border-slate-700 bg-gradient-to-tl from-red-100 to-white rounded-md p-6 shadow-lg'>
+                <h2 className='text-3xl text-center'>Edit Your Event</h2>
+            </div>
             </div>
             <br></br>
             <br></br>
-            <div className='pb-12'>
+            <div className='pb-12 flex justify-center'>
             <div className="w-fit border bg-gradient-to-br from-red-100 to-emerald-100 border-gray-700 rounded-md p-6 shadow-xl">
             <form id="eventDetails" onSubmit={handleClick} className="p-4 pr-8">
                 <div className="grid grid-cols-2 gap-0 relative">

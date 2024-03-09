@@ -1,9 +1,12 @@
-import '../../App.css'
+import '../../App.css';
 import { Button, Modal, TextInput, Label } from 'flowbite-react';
 import { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 
 
 function EventForm() {
+    const navigate = useNavigate();
+
     // set boolean state for three modals (they appear on true)
     const [openModal, setOpenModal] = useState(false);
     const [createUserModal, setCreateUserModal] = useState(false);
@@ -101,8 +104,14 @@ function EventForm() {
               },
               body: JSON.stringify(data),
         })
-        // const res = await response.json();
-        // console.log(res);
+            .then((res) => {
+                return res.json
+            })
+            .then((res) => {
+                console.log(res)
+                navigate(`/events/123`)
+            })
+            .catch((err) => console.log(err))
         }
     }
 
@@ -126,19 +135,19 @@ function EventForm() {
             setPasswordValid('success')
             setPasswordValidLabel('')
         }
+
         if (continueLogin) {
-            
             const loginCreds = {
             email: email,
             password: password,
             }
-
             setEmailValid('gray');
             setPasswordValid('gray');
             setEmail('');
             setPassword('');
             setOpenModal(false)
-    }}
+        }
+    }
 
     // function to handle submit button on create new account form
     async function handleCreateUser() {
@@ -211,7 +220,7 @@ function EventForm() {
     if (userId !== undefined) {
 
     return (
-        <div className="">
+        <div className=''>
             <form id="eventDetails" onSubmit={handleClick} className="p-4 pr-8">
                 <div className="grid grid-cols-2 gap-0">
                 <div className="w-1/3">
@@ -241,6 +250,7 @@ function EventForm() {
                 <br></br>
                 <TextInput type="text" name="capacity" color="" className="focus:ring-0 focus:border-sky-600 border-0 border-gray-500 shadow-lg h-10 w-80 rounded-md" placeholder="Capacity"></TextInput>
                 <br></br>
+                <br></br>
                 <button type="submit" className="text-black border border-black bg-pink-200 hover:bg-pink-500 hover:text-white rounded-md w-80 shadow-lg p-2 font-bold">Create Event and Send Invites</button>
                 <br></br>
                 <br></br>
@@ -256,7 +266,7 @@ function EventForm() {
                 </div>
                 </div>
             </form>
-        </div>
+            </div>
     )
 // if user is not authenticated, display version that has example event and button to create account or login
 } else {

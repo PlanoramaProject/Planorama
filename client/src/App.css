@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Abel&family=Amatic+SC:wght@700&family=Lato&family=Manrope:wght@300&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Rubik+Iso&family=Shadows+Into+Light&family=Tilt+Neon&family=Ubuntu&display=swap');
+
+body{
+  font-family: 'Nunito Sans',serif;
+  background-image: url("https://images.pexels.com/photos/255379/pexels-photo-255379.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
+  background-size: cover;
+}
+
+input {
+  text-align: left;
+  width: 60px;
+}
+
+::placeholder {
+  text-align: left;
+  padding: 8px;
+
+}
+
+input:focus::placeholder {
+  color: transparent;
+}
+
+input:placeholder-shown {
+  text-align: left;
+}
+
+input[type=text]:focus {
+  outline-color:rgb(71, 182, 205);
+}
+
+textarea {
+  text-align: left;
+}
+
+textarea:focus {
+  outline-color: rgb(71, 182, 205);;
+}
+
+textarea:placeholder-shown {
+  text-align: left;
+}
+
+textarea:focus::placeholder {
+  color: transparent;
+}
+
+textarea::placeholder {
+  padding-top:0px;
+}
+
+#formBorder {
+  width:850px;
+}
+
+h3 {
+  text-align: left;
+}
+
+#email {
+  text-align: left;
+}
+#email:focus {
+  outline-color:rgb(71, 182, 205);
+}
+
+#password {
+  text-align: left;
+}
+
+.input:focus {
+  border:0px;
+  outline-color:rgb(71, 182, 205);
+}
+

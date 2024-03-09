@@ -2,13 +2,16 @@ const { User, Event, UserFriends, UserEvents } = require("../models/index");
 
 const eventController = {};
 
+console.log("event controller");
+
 eventController.createEvent = async (req, res, next) => {
+  console.log("req body", req.body);
   const {
     eventName,
     hostName,
     location,
     description,
-    eventPic,
+    //eventPic,
     date,
     startTime,
     endTime,
@@ -24,7 +27,7 @@ eventController.createEvent = async (req, res, next) => {
       name: eventName,
       location,
       description,
-      eventPic,
+      //eventPic,
       date,
       startTime,
       endTime,
@@ -54,12 +57,13 @@ eventController.getEvent = async (req, res, next) => {
 };
 
 eventController.updateEvent = async (req, res, next) => {
+  console.log("update body", req.body);
   const {
     eventID,
     eventName,
     location,
     description,
-    eventPic,
+    //eventPic,
     date,
     startTime,
     endTime,
@@ -72,7 +76,7 @@ eventController.updateEvent = async (req, res, next) => {
     eventName,
     location,
     description,
-    eventPic,
+    //eventPic,
     date,
     startTime,
     endTime,
@@ -93,12 +97,19 @@ eventController.updateEvent = async (req, res, next) => {
 };
 
 eventController.deleteEvent = async (req, res, next) => {
-  const { eventID } = req.body;
+  // const { eventName, hostName } = req.body;
+  const { eventID } = req.params;
+  console.log("event id", eventID);
+
+  // if (!eventName || !hostName) {
   if (!eventID) {
-    return next("Error msg goes here");
+    // return next("EventName or HostName not provided");
+    return next("Error deleting event");
   }
   try {
-    await Event.destroy({ where: { eventID } });
+    // const user = await User.findOne({ where: { fullName: hostName } });
+    // await Event.destroy({ where: { name: eventName, hostID: user.userID } });
+    await Event.destroy({ where: { eventID: eventID } });
     return next();
   } catch (e) {
     console.log(e);

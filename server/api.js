@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { User, Event, UserFriends, UserEvents } = require("./db/associations");
 const { eventController } = require("../server/controller/eventController");
+const { User, Event, UserFriends, UserEvents } = require("./db/associations");
 const { userController } = require('./controller/userController');
 
 
@@ -40,6 +40,7 @@ router.get("/v1/event/:eventID", eventController.getEvent, (req, res, next) => {
 });
 
 router.post("/v1/event", eventController.createEvent, (req, res, next) => {
+  console.log('post reached')
   return res.status(200).json(res.locals.event);
 });
 router.put("/v1/event", eventController.updateEvent, (req, res, next) => {
@@ -48,5 +49,13 @@ router.put("/v1/event", eventController.updateEvent, (req, res, next) => {
 router.delete("/v1/event", eventController.deleteEvent, (req, res, next) => {
   res.status(200);
 });
+router.delete("/v1/event/:eventID", eventController.deleteEvent, (req, res, next) => {
+  res.status(200);
+});
+
+router.post('/test', (req, res, next) => {
+  console.log('test worked');
+  res.sendStatus(200);
+})
 
 module.exports = router;

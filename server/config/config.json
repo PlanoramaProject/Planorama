@@ -1,0 +1,13 @@
+
+{
+  "development": {
+    "username": "",
+    "password": "",
+    "database": "planoramadb",
+    "host": "",
+    "dialect": "postgres"
+
+   
+  }
+
+}

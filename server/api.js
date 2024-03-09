@@ -8,7 +8,8 @@ const {
 const {
   authenticationController,
 } = require("../server/controller/authenticationController");
-const { aiController } = require("../server/controller/aiController");
+// const { aiController } = require("../server/controller/aiController");
+const { userController } = require('./controller/userController');
 
 /**
  * start of merged code
@@ -104,13 +105,13 @@ router.post(
   }
 );
 
-router.post(
-  "/v1/event/prompt",
-  aiController.generateMessage,
-  (req, res, next) => {
-    res.status(200).json({ message: "Ok!" });
-  }
-);
+// router.post(
+//   "/v1/event/prompt",
+//   aiController.generateMessage,
+//   (req, res, next) => {
+//     res.status(200).json({ message: "Ok!" });
+//   }
+// );
 
 router.post(
   "/login/password",

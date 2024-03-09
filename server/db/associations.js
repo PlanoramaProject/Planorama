@@ -6,14 +6,14 @@ const UserFriends = require("./userfriends");
 const { pg } = require("pg");
 require("dotenv").config();
 
-// const sequelize = new Sequelize(process.env.PGURI, {
-//   dialectOptions: {
-//     ssl: {
-//       require: true,
-//       rejectUnauthorized: false, // Note: Setting this to false can create security vulnerabilities.
-//     },
-//   },
-// });
+const sequelize = new Sequelize(process.env.PGURI, {
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false, // Note: Setting this to false can create security vulnerabilities.
+    },
+  },
+});
 
 User.hasMany(Event, { foreignKey: "hostID" });
 Event.belongsTo(User, { as: "Host", foreignKey: "hostID" });
@@ -42,4 +42,4 @@ Event.belongsToMany(User, {
 //   // Start your server here
 // });
 
-module.exports = { User, Event, UserFriends, UserEvents };
+module.exports = { User, Event, UserFriends, UserEvents, sequelize };

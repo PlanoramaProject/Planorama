@@ -2,6 +2,8 @@
 
 body{
   font-family: 'Nunito Sans',serif;
+  background-image: url("https://images.pexels.com/photos/255379/pexels-photo-255379.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
+  background-size: cover;
 }
 
 input {
@@ -23,8 +25,16 @@ input:placeholder-shown {
   text-align: left;
 }
 
+input[type=text]:focus {
+  outline-color:rgb(71, 182, 205);
+}
+
 textarea {
   text-align: left;
+}
+
+textarea:focus {
+  outline-color: rgb(71, 182, 205);;
 }
 
 textarea:placeholder-shown {

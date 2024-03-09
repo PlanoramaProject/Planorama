@@ -1,6 +1,6 @@
 const { User, Event, UserFriends, UserEvents, sequelize } = require("../models/index");
 const { QueryTypes } = require('sequelize');
-
+const argon2 = require('argon2');
 
 
 function createErr(errInfo){
@@ -26,8 +26,10 @@ userController.createUser = async (req, res, next) => {
     return next()
   }
   try{
+    const hash = await argon2.hash(req.body.password);
     const user = await User.create({
       fullName: req.body.fullName,
+      password: hash,
       email: req.body.email,
       picture: req.body.picture,
       phoneNum: req.body.phoneNum
@@ -36,8 +38,8 @@ userController.createUser = async (req, res, next) => {
   }  
   catch(error){
     next(createErr({
-      method: 'postUser',
-      type: 'Database Query Error for Posting User',
+      method: 'createUser',
+      type: 'Database Query Error for Creating User',
       err: error.toString()
     }));
   }
@@ -118,6 +120,7 @@ userController.updateUser = async (req, res, next) => {
   const data = {
   userID: req.body.userID,
   fullName: req.body.fullName,
+  password: req.body.password,
   email: req.body.email,
   picture: req.body.picture,
   phoneNum: req.body.phoneNum
@@ -178,5 +181,25 @@ userController.deleteUser = async (req, res, next) => {
   };
 }
 
+userController.getAll = async (req, res, next) => {
+  if(!req.body){
+    return next(createErr({
+        method: 'getAll',
+        type: 'Failed to get data from req.body',
+        err: 'userController.getAll: ERROR: Incorrect data received.'
+    }))
+  }
+  try{
+    res.locals.users = await User.findAll();
+    next()
+  }
+  catch(error){
+    next(createErr({
+      method: 'getAll',
+      type: 'Database Query Error for Get All',
+      err: error.toString()
+    }))
+  };
+}
 
 module.exports = { userController };

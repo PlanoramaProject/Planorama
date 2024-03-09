@@ -8,6 +8,8 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "argon2-browser": "^1.18.0",
+    "concurrently": "^8.2.2",
     "argon2": "^0.40.1",
     "crypto": "^1.0.1",
     "express-session": "^1.18.0",
@@ -29,11 +31,13 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "old-start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "server": "nodemon src/server/server.js",
     "eject": "react-scripts eject",
-    "server": "nodemon src/server/server.js"
+    "start": "concurrently \"react-scripts start\" \"cd ../server && node server.js\"",
+    "fullInit": "npm install ; cd ../server && npm install"
 
   },
   "eslintConfig": {
